@@ -1,0 +1,92 @@
+{
+  "rooms": [
+    { "id": "R1", "capacity": 30 },
+    { "id": "R2", "capacity": 40 },
+    { "id": "R3", "capacity": 50 }
+  ],
+  "instructors": [
+    {
+      "id": "I1",
+      "name": "Dr. A",
+      "maxDailyMinutes": 240,
+      "maxWeeklyMinutes": 600,
+      "availableDays": ["Sat", "Mon", "Wed"]
+    },
+    {
+      "id": "I2",
+      "name": "Dr. B",
+      "maxDailyMinutes": 180,
+      "maxWeeklyMinutes": 540,
+      "availableDays": ["Sun", "Tue"]
+    },
+    {
+      "id": "I3",
+      "name": "Dr. C",
+      "maxDailyMinutes": 300,
+      "maxWeeklyMinutes": 720,
+      "availableDays": ["Sat", "Tue", "Wed"]
+    }
+  ],
+  "courses": [
+    {
+      "id": "C1",
+      "name": "Algorithms",
+      "instructorId": "I1",
+      "sessionCount": 2,
+      "duration": 75,
+      "capacity": 35,
+      "level": "Undergraduate",
+      "term": 1
+    },
+    {
+      "id": "C2",
+      "name": "Machine Learning",
+      "instructorId": "I2",
+      "sessionCount": 1,
+      "duration": 15,
+      "capacity": 40,
+      "level": "Undergraduate",
+      "term": 1
+    },
+    {
+      "id": "C3",
+      "name": "Quantum Computing",
+      "instructorId": "I3",
+      "sessionCount": 2,
+      "duration": 60,
+      "capacity": 30,
+      "level": "Undergraduate",
+      "term": 1
+    },
+    {
+      "id": "C4",
+      "name": "Data Structures",
+      "instructorId": "I1",
+      "sessionCount": 1,
+      "duration": 75,
+      "capacity": 25,
+      "level": "Undergraduate",
+      "term": 1
+    },
+    {
+      "id": "C5",
+      "name": "AI Ethics",
+      "instructorId": "I2",
+      "sessionCount": 2,
+      "duration": 105,
+      "capacity": 40,
+      "level": "Undergraduate",
+      "term": 1
+    },
+    {
+      "id": "C6",
+      "name": "Deep Learning",
+      "instructorId": "I3",
+      "sessionCount": 1,
+      "duration": 90,
+      "capacity": 45,
+      "level": "Undergraduate",
+      "term": 1
+    }
+  ]
+}
