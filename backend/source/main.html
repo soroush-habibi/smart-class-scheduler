@@ -1,0 +1,828 @@
+<!doctype html>
+<html lang="fa">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Weekly Timeline — Room per Session</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    :root {
+      --timeline-start: 8;
+      --timeline-end: 18;
+      --lane-height: 48px;
+      --lane-gap: 6px;
+    }
+
+    body {
+      font-family: "Tahoma", Arial, sans-serif;
+      background: #f7f7f9;
+      padding: 20px;
+    }
+
+    .container-tl {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .time-scale {
+      display: flex;
+      gap: 0;
+      margin-bottom: 8px;
+      background: transparent;
+      user-select: none;
+    }
+
+    .time-scale .tick {
+      flex: 1;
+      text-align: center;
+      font-size: 12px;
+      color: #333;
+      border-left: 1px solid rgba(0, 0, 0, 0.06);
+      padding: 6px 0;
+      background: #fff;
+    }
+
+    .time-scale .tick:first-child {
+      border-left: none;
+    }
+
+    .day-row {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 10px;
+      align-items: flex-start;
+    }
+
+    .day-label {
+      width: 72px;
+      min-width: 72px;
+      text-align: right;
+      padding-right: 8px;
+      font-weight: 600;
+      font-size: 14px;
+      color: #222;
+    }
+
+    .day-timeline {
+      background: #fff;
+      border: 1px solid rgba(0, 0, 0, 0.06);
+      position: relative;
+      width: 100%;
+      overflow: visible;
+      box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.02) inset;
+    }
+
+    .day-timeline .gridline {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 1px;
+      background: rgba(0, 0, 0, 0.03);
+      pointer-events: none;
+    }
+
+    .course-block {
+      position: absolute;
+      height: var(--lane-height);
+      border-radius: 6px;
+      color: #fff;
+      padding: 6px 8px;
+      font-size: 13px;
+      line-height: calc(var(--lane-height) - 0px);
+      box-sizing: border-box;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+      cursor: default;
+    }
+
+    .color-0 {
+      background: #4CAF50;
+    }
+
+    .color-1 {
+      background: #2196F3;
+    }
+
+    .color-2 {
+      background: #FF9800;
+    }
+
+    .color-3 {
+      background: #9C27B0;
+    }
+
+    .color-4 {
+      background: #F44336;
+    }
+
+    .color-5 {
+      background: #3F51B5;
+    }
+
+    .color-6 {
+      background: #00BCD4;
+    }
+
+    .color-7 {
+      background: #8BC34A;
+    }
+
+    .course-block.small {
+      font-size: 11px;
+      padding: 4px 6px;
+    }
+
+    @media (max-width:600px) {
+      .day-label {
+        width: 58px;
+        min-width: 58px;
+        font-size: 13px;
+      }
+
+      :root {
+        --lane-height: 42px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container-tl">
+    <h4 class="mb-2">برنامه هفتگی — Timeline دقیقه‌ای (Room per session)</h4>
+    <p class="text-muted small mb-3">هر کلاس در لِین جدا قرار می‌گیرد. روم هر جلسه مشخص است.</p>
+    <div id="timeScale" class="time-scale mb-2"></div>
+    <div id="timelineContainer"></div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    const data = {
+      "schedule": [
+        {
+          "courseId": "C17",
+          "sessions": [
+            {
+              "day": "Sat",
+              "start": "08:00",
+              "end": "09:00",
+              "roomId": "R3"
+            },
+            {
+              "day": "Sun",
+              "start": "08:00",
+              "end": "09:00",
+              "roomId": "R3"
+            }
+          ]
+        },
+        {
+          "courseId": "C37",
+          "sessions": [
+            {
+              "day": "Mon",
+              "start": "08:15",
+              "end": "09:15",
+              "roomId": "R3"
+            },
+            {
+              "day": "Tue",
+              "start": "08:15",
+              "end": "09:15",
+              "roomId": "R3"
+            }
+          ]
+        },
+        {
+          "courseId": "C14",
+          "sessions": [
+            {
+              "day": "Sat",
+              "start": "08:30",
+              "end": "09:30",
+              "roomId": "R4"
+            },
+            {
+              "day": "Sun",
+              "start": "08:30",
+              "end": "09:30",
+              "roomId": "R4"
+            }
+          ]
+        },
+        {
+          "courseId": "C26",
+          "sessions": [
+            {
+              "day": "Sat",
+              "start": "08:45",
+              "end": "09:45",
+              "roomId": "R2"
+            },
+            {
+              "day": "Sun",
+              "start": "08:45",
+              "end": "09:45",
+              "roomId": "R2"
+            }
+          ]
+        },
+        {
+          "courseId": "C28",
+          "sessions": [
+            {
+              "day": "Sat",
+              "start": "09:15",
+              "end": "10:15",
+              "roomId": "R3"
+            },
+            {
+              "day": "Sun",
+              "start": "09:15",
+              "end": "10:15",
+              "roomId": "R3"
+            }
+          ]
+        },
+        {
+          "courseId": "C34",
+          "sessions": [
+            {
+              "day": "Mon",
+              "start": "09:00",
+              "end": "10:00",
+              "roomId": "R4"
+            },
+            {
+              "day": "Tue",
+              "start": "09:00",
+              "end": "10:00",
+              "roomId": "R4"
+            }
+          ]
+        },
+        {
+          "courseId": "C6",
+          "sessions": [
+            {
+              "day": "Mon",
+              "start": "09:30",
+              "end": "10:30",
+              "roomId": "R3"
+            },
+            {
+              "day": "Tue",
+              "start": "09:30",
+              "end": "10:30",
+              "roomId": "R3"
+            }
+          ]
+        },
+        {
+          "courseId": "C8",
+          "sessions": [
+            {
+              "day": "Mon",
+              "start": "09:45",
+              "end": "10:45",
+              "roomId": "R2"
+            },
+            {
+              "day": "Tue",
+              "start": "09:45",
+              "end": "10:45",
+              "roomId": "R2"
+            }
+          ]
+        },
+        {
+          "courseId": "C15",
+          "sessions": [
+            {
+              "day": "Sat",
+              "start": "10:00",
+              "end": "11:00",
+              "roomId": "R4"
+            },
+            {
+              "day": "Sun",
+              "start": "10:00",
+              "end": "11:00",
+              "roomId": "R4"
+            }
+          ]
+        },
+        {
+          "courseId": "C35",
+          "sessions": [
+            {
+              "day": "Mon",
+              "start": "10:15",
+              "end": "11:15",
+              "roomId": "R4"
+            },
+            {
+              "day": "Tue",
+              "start": "10:15",
+              "end": "11:15",
+              "roomId": "R4"
+            }
+          ]
+        },
+        {
+          "courseId": "C1",
+          "sessions": [
+            {
+              "day": "Sat",
+              "start": "10:30",
+              "end": "11:30",
+              "roomId": "R5"
+            },
+            {
+              "day": "Sun",
+              "start": "10:30",
+              "end": "11:30",
+              "roomId": "R5"
+            }
+          ]
+        },
+        {
+          "courseId": "C19",
+          "sessions": [
+            {
+              "day": "Sat",
+              "start": "11:15",
+              "end": "12:15",
+              "roomId": "R4"
+            },
+            {
+              "day": "Sun",
+              "start": "11:15",
+              "end": "12:15",
+              "roomId": "R4"
+            }
+          ]
+        },
+        {
+          "courseId": "C21",
+          "sessions": [
+            {
+              "day": "Mon",
+              "start": "11:00",
+              "end": "12:30",
+              "roomId": "R5"
+            },
+            {
+              "day": "Tue",
+              "start": "11:00",
+              "end": "12:30",
+              "roomId": "R5"
+            }
+          ]
+        },
+        {
+          "courseId": "C39",
+          "sessions": [
+            {
+              "day": "Mon",
+              "start": "11:30",
+              "end": "12:30",
+              "roomId": "R4"
+            },
+            {
+              "day": "Tue",
+              "start": "11:30",
+              "end": "12:30",
+              "roomId": "R4"
+            }
+          ]
+        },
+        {
+          "courseId": "C10",
+          "sessions": [
+            {
+              "day": "Sat",
+              "start": "10:45",
+              "end": "11:45",
+              "roomId": "R6"
+            },
+            {
+              "day": "Sun",
+              "start": "10:45",
+              "end": "11:45",
+              "roomId": "R6"
+            }
+          ]
+        },
+        {
+          "courseId": "C2",
+          "sessions": [
+            {
+              "day": "Sat",
+              "start": "11:45",
+              "end": "12:45",
+              "roomId": "R6"
+            },
+            {
+              "day": "Sun",
+              "start": "11:45",
+              "end": "12:45",
+              "roomId": "R6"
+            }
+          ]
+        },
+        {
+          "courseId": "C22",
+          "sessions": [
+            {
+              "day": "Mon",
+              "start": "12:45",
+              "end": "13:45",
+              "roomId": "R6"
+            },
+            {
+              "day": "Tue",
+              "start": "12:45",
+              "end": "13:45",
+              "roomId": "R6"
+            }
+          ]
+        },
+        {
+          "courseId": "C30",
+          "sessions": [
+            {
+              "day": "Mon",
+              "start": "12:00",
+              "end": "13:00",
+              "roomId": "R3"
+            },
+            {
+              "day": "Tue",
+              "start": "12:00",
+              "end": "13:00",
+              "roomId": "R3"
+            }
+          ]
+        },
+        {
+          "courseId": "C23",
+          "sessions": [
+            {
+              "day": "Sat",
+              "start": "13:00",
+              "end": "14:00",
+              "roomId": "R7"
+            },
+            {
+              "day": "Sun",
+              "start": "13:00",
+              "end": "14:00",
+              "roomId": "R7"
+            }
+          ]
+        },
+        {
+          "courseId": "C3",
+          "sessions": [
+            {
+              "day": "Mon",
+              "start": "14:00",
+              "end": "15:00",
+              "roomId": "R7"
+            },
+            {
+              "day": "Tue",
+              "start": "14:00",
+              "end": "15:00",
+              "roomId": "R7"
+            }
+          ]
+        },
+        {
+          "courseId": "C27",
+          "sessions": [
+            {
+              "day": "Wed",
+              "start": "12:15",
+              "end": "13:15",
+              "roomId": "R3"
+            }
+          ]
+        },
+        {
+          "courseId": "C7",
+          "sessions": [
+            {
+              "day": "Sat",
+              "start": "14:15",
+              "end": "15:15",
+              "roomId": "R3"
+            }
+          ]
+        },
+        {
+          "courseId": "C16",
+          "sessions": [
+            {
+              "day": "Wed",
+              "start": "12:30",
+              "end": "13:30",
+              "roomId": "R4"
+            }
+          ]
+        },
+        {
+          "courseId": "C18",
+          "sessions": [
+            {
+              "day": "Wed",
+              "start": "13:30",
+              "end": "14:30",
+              "roomId": "R4"
+            }
+          ]
+        },
+        {
+          "courseId": "C24",
+          "sessions": [
+            {
+              "day": "Wed",
+              "start": "13:15",
+              "end": "14:15",
+              "roomId": "R3"
+            }
+          ]
+        },
+        {
+          "courseId": "C36",
+          "sessions": [
+            {
+              "day": "Sat",
+              "start": "13:45",
+              "end": "14:45",
+              "roomId": "R4"
+            }
+          ]
+        },
+        {
+          "courseId": "C38",
+          "sessions": [
+            {
+              "day": "Sat",
+              "start": "15:30",
+              "end": "16:30",
+              "roomId": "R4"
+            }
+          ]
+        },
+        {
+          "courseId": "C4",
+          "sessions": [
+            {
+              "day": "Sat",
+              "start": "14:30",
+              "end": "15:30",
+              "roomId": "R2"
+            }
+          ]
+        },
+        {
+          "courseId": "C25",
+          "sessions": [
+            {
+              "day": "Wed",
+              "start": "14:45",
+              "end": "15:45",
+              "roomId": "R4"
+            }
+          ]
+        },
+        {
+          "courseId": "C5",
+          "sessions": [
+            {
+              "day": "Sat",
+              "start": "15:45",
+              "end": "16:45",
+              "roomId": "R3"
+            }
+          ]
+        },
+        {
+          "courseId": "C11",
+          "sessions": [
+            {
+              "day": "Wed",
+              "start": "15:00",
+              "end": "16:00",
+              "roomId": "R5"
+            }
+          ]
+        },
+        {
+          "courseId": "C29",
+          "sessions": [
+            {
+              "day": "Wed",
+              "start": "16:00",
+              "end": "17:00",
+              "roomId": "R5"
+            }
+          ]
+        },
+        {
+          "courseId": "C31",
+          "sessions": [
+            {
+              "day": "Sat",
+              "start": "16:45",
+              "end": "17:45",
+              "roomId": "R5"
+            }
+          ]
+        },
+        {
+          "courseId": "C9",
+          "sessions": [
+            {
+              "day": "Sat",
+              "start": "17:00",
+              "end": "18:00",
+              "roomId": "R4"
+            }
+          ]
+        },
+        {
+          "courseId": "C12",
+          "sessions": [
+            {
+              "day": "Wed",
+              "start": "16:15",
+              "end": "17:15",
+              "roomId": "R6"
+            }
+          ]
+        },
+        {
+          "courseId": "C20",
+          "sessions": [
+            {
+              "day": "Wed",
+              "start": "15:15",
+              "end": "16:15",
+              "roomId": "R6"
+            }
+          ]
+        },
+        {
+          "courseId": "C32",
+          "sessions": [
+            {
+              "day": "Sun",
+              "start": "16:30",
+              "end": "17:30",
+              "roomId": "R6"
+            }
+          ]
+        },
+        {
+          "courseId": "C40",
+          "sessions": [
+            {
+              "day": "Sat",
+              "start": "12:15",
+              "end": "13:15",
+              "roomId": "R5"
+            }
+          ]
+        },
+        {
+          "courseId": "C13",
+          "sessions": [
+            {
+              "day": "Wed",
+              "start": "08:00",
+              "end": "09:00",
+              "roomId": "R7"
+            }
+          ]
+        },
+        {
+          "courseId": "C33",
+          "sessions": [
+            {
+              "day": "Sun",
+              "start": "14:15",
+              "end": "15:15",
+              "roomId": "R7"
+            }
+          ]
+        }
+      ]
+    }
+
+    // تنظیمات
+    const DAYS = ["Sat", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri"];
+    const TL_START = 8;
+    const TL_END = 18;
+    const TOTAL_MINUTES = (TL_END - TL_START) * 60;
+
+    function colorIndexFromId(id) { let s = 0; for (let i = 0; i < id.length; i++) s += id.charCodeAt(i); return s % 8; }
+    function minutesFromStart(timeStr) { const [hh, mm] = timeStr.split(':').map(x => parseInt(x, 10)); return (hh - TL_START) * 60 + mm; }
+
+    function renderTimeScale() {
+      const scale = document.getElementById('timeScale'); scale.innerHTML = '';
+      for (let i = 0; i <= TL_END - TL_START; i++) {
+        const tick = document.createElement('div'); tick.className = 'tick';
+        let hour = TL_START + i; tick.textContent = (hour < 10 ? '0' + hour : hour) + ":00";
+        scale.appendChild(tick);
+      }
+    }
+
+    function buildDayRows() {
+      const container = document.getElementById('timelineContainer');
+      container.innerHTML = '';
+      // جلسات تخت با roomId از هر session
+      const flatSessions = [];
+      data.schedule.forEach(course => {
+        course.sessions.forEach(s => {
+          flatSessions.push({
+            courseId: course.courseId,
+            roomId: s.roomId,   // مهم: roomId از خود سشن
+            day: s.day,
+            start: s.start,
+            end: s.end
+          });
+        });
+      });
+      const sessionsByDay = {}; DAYS.forEach(d => sessionsByDay[d] = []);
+      flatSessions.forEach(s => { if (sessionsByDay[s.day]) sessionsByDay[s.day].push(s); });
+
+      DAYS.forEach(day => {
+        const row = document.createElement('div'); row.className = 'day-row';
+        const label = document.createElement('div'); label.className = 'day-label'; label.textContent = day;
+        row.appendChild(label);
+        const timeline = document.createElement('div'); timeline.className = 'day-timeline';
+        timeline.style.minHeight = 'calc(var(--lane-height)+var(--lane-gap))'; timeline.style.position = 'relative';
+        row.appendChild(timeline);
+
+        const sessions = sessionsByDay[day] || [];
+        if (sessions.length === 0) { container.appendChild(row); return; }
+        sessions.sort((a, b) => minutesFromStart(a.start) - minutesFromStart(b.start));
+
+        const lanes = []; const placed = [];
+        sessions.forEach(s => {
+          let sStart = minutesFromStart(s.start), sEnd = minutesFromStart(s.end);
+          sStart = Math.max(0, sStart); sEnd = Math.min(TOTAL_MINUTES, sEnd);
+          let laneIndex = -1;
+          for (let i = 0; i < lanes.length; i++) { if (lanes[i].lastEnd <= sStart) { laneIndex = i; break; } }
+          if (laneIndex === -1) { laneIndex = lanes.length; lanes.push({ lastEnd: sEnd }); } else { lanes[laneIndex].lastEnd = sEnd; }
+          placed.push({ ...s, startMin: sStart, endMin: sEnd, lane: laneIndex });
+        });
+
+        const laneHeight = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--lane-height')) || 48;
+        const laneGap = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--lane-gap')) || 6;
+        timeline.style.height = (lanes.length * laneHeight + (lanes.length - 1) * laneGap + 8) + 'px';
+
+        const tickIntervalMinutes = 30; const ticksCount = Math.ceil(TOTAL_MINUTES / tickIntervalMinutes);
+        for (let t = 0; t <= ticksCount; t++) {
+          const mm = t * tickIntervalMinutes;
+          const leftPct = (mm / TOTAL_MINUTES) * 100;
+          const gl = document.createElement('div'); gl.className = 'gridline';
+          gl.style.left = leftPct + '%';
+          gl.style.opacity = (mm % 60 === 0) ? '0.25' : '0.08';
+          timeline.appendChild(gl);
+        }
+
+        placed.forEach(p => {
+          if (p.endMin <= p.startMin) return;
+          const leftPct = (p.startMin / TOTAL_MINUTES) * 100;
+          const widthPct = ((p.endMin - p.startMin) / TOTAL_MINUTES) * 100;
+          const block = document.createElement('div');
+          block.className = 'course-block color-' + colorIndexFromId(p.courseId);
+          if (widthPct < 6) block.classList.add('small');
+          block.style.left = leftPct + '%';
+          block.style.width = widthPct + '%';
+          block.style.top = (p.lane * (laneHeight + laneGap) + 5) + 'px';
+          block.textContent = p.courseId + ' · ' + p.roomId;
+          block.setAttribute('data-bs-toggle', 'tooltip');
+          block.setAttribute('data-bs-placement', 'top');
+          block.title = `${p.courseId} — ${p.roomId}\n${p.start} - ${p.end}`;
+          timeline.appendChild(block);
+        });
+
+        container.appendChild(row);
+      });
+
+      const tooltipTriggerList = Array.from(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+      tooltipTriggerList.map(el => new bootstrap.Tooltip(el, { html: false }));
+    }
+
+    renderTimeScale(); buildDayRows();
+  </script>
+</body>
+
+</html>
