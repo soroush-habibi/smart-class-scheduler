@@ -1,7 +1,44 @@
-import express from "express";
+import express, { NextFunction, Request, Response } from "express";
 import "dotenv/config";
+import crudRouter from "./routes/crudRouter.js";
+import prisma from "@prisma/client";
+import { CustomErrorClass, errorEnum, errorType } from "./utils/customError.js";
 
 const app = express();
+
+declare global {
+    namespace Express {
+        interface Request {
+            prisma: prisma.PrismaClient;
+        }
+    }
+}
+
+const Prisma = new prisma.PrismaClient();
+app.use((req: Request, res: Response, next: NextFunction) => {
+    req.prisma = Prisma;
+    next();
+});
+
+app.use(express.json());
+app.use(express.urlencoded());
+
+app.use(crudRouter);
+
+app.use((err: errorType | Error, req: Request, res: Response, next: NextFunction) => {
+    if (err instanceof Error) {
+        res.status(500).json({
+            name: "INTERNAL ERROR",
+            code: errorEnum.INTERNAL_ERROR
+        });
+    } else {
+        res.status(err.httpCode).json({
+            name: err.name,
+            code: err.code,
+            message: err.message
+        });
+    }
+});
 
 app.listen(process.env.PORT || 3000, () => {
     console.log(`App is running on port ${process.env.PORT || 3000}`);
