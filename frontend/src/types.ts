@@ -1,32 +1,34 @@
-// روزهای قابل انتخاب
-export type Day = "Sat" | "Sun" | "Mon" | "Tue" | "Wed";
+export type Day = 'Sat' | 'Sun' | 'Mon' | 'Tue' | 'Wed';
+export type TermSeason = 'First' | 'Second' | 'Summer';
+export type Level = 'Graduate' | 'Undergraduate' | 'PhD';
 
-// استاد
+export interface Term {
+    id: string;
+    yearStart: number;
+    yearEnd: number;
+    season: TermSeason;
+}
+
 export interface Instructor {
-    id: string;                // I1, I2, ...
-    name: string;              // نام استاد
-    maxDailyMinutes: number;   // حداکثر دقایق روزانه
-    maxWeeklyMinutes: number;  // حداکثر دقایق هفتگی
-    availableDays: Day[];      // روزهای در دسترس
+    id: string;
+    name: string;
+    maxDailyMinutes: number;
+    maxWeeklyMinutes: number;
+    availableDays: Day[];
 }
 
-// سطح کلاس
-export type Level = "Undergraduate" | "Graduate" | "PhD";
-
-// درس
 export interface Course {
-    id: string;           // C1, C2, ...
-    instructorId: string; // آیدی استاد (I1, I2, ...)
-    name: string;         // نام درس
-    sessionCount: 1 | 2;      // تعداد سشن (1 یا 2)
-    duration: number;     // مدت زمان هر سشن (دقیقه)
-    capacity: number;     // ظرفیت کلاس
-    level: Level;         // سطح کلاس
-    term: number;         // شماره ترم
+    id: string;
+    name: string;
+    instructorId: string;
+    sessions: number; // 1 یا 2
+    duration: number; // دقیقه
+    capacity: number;
+    level: Level;
+    termId: string;
 }
 
-// اتاق
 export interface Room {
-    id: string;       // R1, R2, ...
-    capacity: number; // ظرفیت اتاق
+    id: string;
+    capacity: number;
 }

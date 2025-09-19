@@ -337,6 +337,9 @@ function scheduleClasses(input: InputData): OutputData | null {
 // ----------------------
 // Main
 // ----------------------
+
+export { scheduleClasses };
+
 const inputJson = fs.readFileSync(path.join(ROOT, 'input.json'), 'utf8');
 const inputData: InputData = JSON.parse(inputJson);
 
