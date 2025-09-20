@@ -1,6 +1,6 @@
 import express from "express";
-import { validator } from "../utils/validator.js";
-import { addRoomDTO, addTermDTO } from "../dto/crud.dto.js";
+import { FieldType, validator } from "../utils/validator.js";
+import { addInstructorDTO, addRoomDTO, addTermDTO, scheduleInstructorDTO, scheduleInstructorParamsDTO } from "../dto/crud.dto.js";
 import CrudController from "../controllers/crudController.js";
 
 const crudRouter = express.Router();
@@ -8,5 +8,8 @@ const crudRouter = express.Router();
 crudRouter.post("/room", validator(addRoomDTO), CrudController.addRoom);
 
 crudRouter.post("/term", validator(addTermDTO), CrudController.addTerm);
+
+crudRouter.post("/instructor", validator(addInstructorDTO), CrudController.addInstructor);
+crudRouter.put("/instructor/schedule/:instructorId", validator(scheduleInstructorParamsDTO, FieldType.PARAMS), validator(scheduleInstructorDTO), CrudController.scheduleInstructor);
 
 export default crudRouter;

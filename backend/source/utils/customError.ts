@@ -9,7 +9,9 @@ export enum errorEnum {
     INTERNAL_ERROR = 9999,
     BAD_REQUEST = 400,
     JOI_ERROR = 102,
-    TERM_YEAR_INVALID = 103
+    TERM_YEAR_INVALID = 103,
+    DUPLICATE = 104,
+    NOT_FOUND = 105,
 }
 
 export class CustomErrorClass {
@@ -43,6 +45,23 @@ export class CustomErrorClass {
             name: "TERM_YEAR_INVALID",
             code: errorEnum.TERM_YEAR_INVALID,
             httpCode: 400
+        };
+    }
+
+    static duplicate(): errorType {
+        return {
+            name: "DUPLICATE",
+            code: errorEnum.DUPLICATE,
+            httpCode: 400
+        };
+    }
+
+    static notFound(message?: string): errorType {
+        return {
+            name: "NOT_FOUND",
+            code: errorEnum.NOT_FOUND,
+            httpCode: 404,
+            message
         };
     }
 }
