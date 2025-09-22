@@ -70,7 +70,8 @@ const addCourseDTO = Joi.object({
         "number.invalid": "duration should be multiply of 15!"
     }).required(),
     capacity: Joi.number().integer().min(5).required(),
-    level: Joi.string().valid(...Object.values(levelType)).required()
+    level: Joi.string().valid(...Object.values(levelType)).required(),
+    forTerm: Joi.number().integer().min(1).max(12).required()
 }).required();
 
 type addCourseDTOType = {
@@ -80,6 +81,7 @@ type addCourseDTOType = {
     duration: number,
     capacity: number,
     level: levelType,
+    forTerm: number;
 };
 
 export { addCourseDTO, addCourseDTOType };

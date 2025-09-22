@@ -109,7 +109,8 @@ export default class CrudController {
                     sessionCount: body.sessionCount,
                     duration: body.duration,
                     capacity: body.capacity,
-                    level: body.level
+                    level: body.level,
+                    forTerm: body.forTerm
                 }
             });
 

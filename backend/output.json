@@ -1,19 +1,13 @@
 {
   "schedule": [
     {
-      "courseId": "C1",
+      "courseId": 7,
       "sessions": [
         {
           "day": "Sat",
           "start": "08:00",
-          "end": "09:00",
-          "roomId": "R1"
-        },
-        {
-          "day": "Sun",
-          "start": "08:00",
-          "end": "09:00",
-          "roomId": "R1"
+          "end": "08:30",
+          "roomId": 3
         }
       ]
     }

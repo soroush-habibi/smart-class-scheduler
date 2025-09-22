@@ -3,6 +3,7 @@ import "dotenv/config";
 import crudRouter from "./routes/crudRouter.js";
 import prisma from "@prisma/client";
 import { CustomErrorClass, errorEnum, errorType } from "./utils/customError.js";
+import operationRouter from "./routes/operationRouter.js";
 
 const app = express();
 
@@ -24,6 +25,7 @@ app.use(express.json());
 app.use(express.urlencoded());
 
 app.use(crudRouter);
+app.use(operationRouter);
 
 app.use((err: errorType | Error, req: Request, res: Response, next: NextFunction) => {
     if (err instanceof Error) {
