@@ -1,5 +1,5 @@
 import Joi from "joi";
-import { $Enums } from "@prisma/client";
+import { levelType, termType } from "@prisma/client";
 
 const addRoomDTO = Joi.object({
     capacity: Joi.number().integer().min(5).max(200).required()
@@ -14,13 +14,13 @@ export { addRoomDTO, addRoomDTOType };
 const addTermDTO = Joi.object({
     yearStart: Joi.number().integer().min(1395).required(),
     yearEnd: Joi.number().integer().min(1395).required(),
-    type: Joi.string().valid(...Object.values($Enums.termType)).required(),
+    type: Joi.string().valid(...Object.values(termType)).required(),
 }).required();
 
 type addTermDTOType = {
     yearStart: number,
     yearEnd: number,
-    type: $Enums.termType;
+    type: termType;
 };
 
 export { addTermDTO, addTermDTOType };
@@ -58,3 +58,28 @@ type scheduleInstructorParamsDTOType = {
 };
 
 export { scheduleInstructorDTO, scheduleInstructorDTOType, scheduleInstructorParamsDTO, scheduleInstructorParamsDTOType };
+
+const addCourseDTO = Joi.object({
+    name: Joi.string().max(200).required(),
+    instructorTermId: Joi.number().integer().min(1).required(),
+    sessionCount: Joi.number().integer().valid(1, 2).required(),
+    duration: Joi.number().integer().min(15).custom((value: number, helpers: Joi.CustomHelpers) => {
+        if (value % 15 !== 0) return helpers.error("number.invalid");
+        return value;
+    }).messages({
+        "number.invalid": "duration should be multiply of 15!"
+    }).required(),
+    capacity: Joi.number().integer().min(5).required(),
+    level: Joi.string().valid(...Object.values(levelType)).required()
+}).required();
+
+type addCourseDTOType = {
+    name: string,
+    instructorTermId: number,
+    sessionCount: number,
+    duration: number,
+    capacity: number,
+    level: levelType,
+};
+
+export { addCourseDTO, addCourseDTOType };

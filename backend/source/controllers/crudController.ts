@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
-import { addInstructorDTOType, addRoomDTOType, addTermDTOType, scheduleInstructorDTOType, scheduleInstructorParamsDTOType } from "../dto/crud.dto.js";
+import { addCourseDTOType, addInstructorDTOType, addRoomDTOType, addTermDTOType, scheduleInstructorDTOType, scheduleInstructorParamsDTOType } from "../dto/crud.dto.js";
 import { CustomErrorClass } from "../utils/customError.js";
-import { $Enums, Prisma } from "@prisma/client";
+import { termType } from "@prisma/client";
 
 export default class CrudController {
     static async addRoom(req: Request, res: Response, next: NextFunction) {
@@ -28,7 +28,7 @@ export default class CrudController {
         const body = req.body as addTermDTOType;
 
         try {
-            if (body.type === $Enums.termType.summer) {
+            if (body.type === termType.summer) {
                 if (body.yearStart !== body.yearEnd) return next(CustomErrorClass.termYearInvalid());
             } else {
                 if (body.yearEnd - body.yearStart !== 1) return next(CustomErrorClass.termYearInvalid());
@@ -89,6 +89,32 @@ export default class CrudController {
 
             res.status(201).json({
                 message: "instructor created!",
+                data: result.id
+            });
+        } catch (e: any) {
+            if (e.code === "P2003") return next(CustomErrorClass.notFound(`foreign key not found: ${e.meta.constraint}`));
+            if (e.code === "P2002") return next(CustomErrorClass.duplicate());
+            return next(CustomErrorClass.internalError());
+        }
+    }
+
+    static async addCourse(req: Request, res: Response, next: NextFunction) {
+        const body = req.body as addCourseDTOType;
+
+        try {
+            const result = await req.prisma.course.create({
+                data: {
+                    name: body.name,
+                    instructorTermId: body.instructorTermId,
+                    sessionCount: body.sessionCount,
+                    duration: body.duration,
+                    capacity: body.capacity,
+                    level: body.level
+                }
+            });
+
+            res.status(201).json({
+                message: "course created!",
                 data: result.id
             });
         } catch (e: any) {
