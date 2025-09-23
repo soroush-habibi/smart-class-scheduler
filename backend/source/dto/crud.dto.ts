@@ -11,6 +11,18 @@ type addRoomDTOType = {
 
 export { addRoomDTO, addRoomDTOType };
 
+const getRoomsDTO = Joi.object({
+    page: Joi.number().integer().min(1).required(),
+    limit: Joi.number().integer().min(1).optional()
+}).required();
+
+type getRoomsDTOType = {
+    page: string,
+    limit?: string;
+};
+
+export { getRoomsDTO, getRoomsDTOType };
+
 const addTermDTO = Joi.object({
     yearStart: Joi.number().integer().min(1395).required(),
     yearEnd: Joi.number().integer().min(1395).required(),
@@ -25,6 +37,18 @@ type addTermDTOType = {
 
 export { addTermDTO, addTermDTOType };
 
+const getTermsDTO = Joi.object({
+    page: Joi.number().integer().min(1).required(),
+    limit: Joi.number().integer().min(1).optional()
+}).required();
+
+type getTermsDTOType = {
+    page: string,
+    limit?: string;
+};
+
+export { getTermsDTO, getTermsDTOType };
+
 const addInstructorDTO = Joi.object({
     name: Joi.string().max(200).required()
 }).required();
@@ -34,6 +58,18 @@ type addInstructorDTOType = {
 };
 
 export { addInstructorDTO, addInstructorDTOType };
+
+const getInstructorsDTO = Joi.object({
+    page: Joi.number().integer().min(1).required(),
+    limit: Joi.number().integer().min(1).optional()
+}).required();
+
+type getInstructorsDTOType = {
+    page: string,
+    limit?: string;
+};
+
+export { getInstructorsDTO, getInstructorsDTOType };
 
 const scheduleInstructorDTO = Joi.object({
     maxDailyMinutes: Joi.number().integer().min(60).required(),
@@ -58,6 +94,20 @@ type scheduleInstructorParamsDTOType = {
 };
 
 export { scheduleInstructorDTO, scheduleInstructorDTOType, scheduleInstructorParamsDTO, scheduleInstructorParamsDTOType };
+
+const getInstructorTermsDTO = Joi.object({
+    page: Joi.number().integer().min(1).required(),
+    limit: Joi.number().integer().min(1).optional(),
+    termId: Joi.number().integer().min(1).required(),
+}).required();
+
+type getInstructorTermsDTOType = {
+    page: string,
+    limit?: string,
+    termId: string;
+};
+
+export { getInstructorTermsDTO, getInstructorTermsDTOType };
 
 const addCourseDTO = Joi.object({
     name: Joi.string().max(200).required(),

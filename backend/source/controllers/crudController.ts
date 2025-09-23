@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { addCourseDTOType, addInstructorDTOType, addRoomDTOType, addTermDTOType, scheduleInstructorDTOType, scheduleInstructorParamsDTOType } from "../dto/crud.dto.js";
+import { addCourseDTOType, addInstructorDTOType, addRoomDTOType, addTermDTOType, getInstructorsDTOType, getInstructorTermsDTOType, getRoomsDTOType, getTermsDTOType, scheduleInstructorDTOType, scheduleInstructorParamsDTOType } from "../dto/crud.dto.js";
 import { CustomErrorClass } from "../utils/customError.js";
 import { termType } from "@prisma/client";
 
@@ -20,6 +20,25 @@ export default class CrudController {
             });
         } catch (e: any) {
             if (e.code === "P2002") return next(CustomErrorClass.duplicate());
+            return next(CustomErrorClass.internalError());
+        }
+    }
+
+    static async getRooms(req: Request, res: Response, next: NextFunction) {
+        const query = req.query as getRoomsDTOType;
+        if (!query.limit) query.limit = "10";
+
+        try {
+            const result = await req.prisma.room.findMany({
+                skip: (Number(query.page) - 1) * Number(query.limit),
+                take: Number(query.limit)
+            });
+
+            res.status(200).json({
+                message: "rooms list:",
+                data: result
+            });
+        } catch (e: any) {
             return next(CustomErrorClass.internalError());
         }
     }
@@ -52,6 +71,28 @@ export default class CrudController {
         }
     }
 
+    static async getTerms(req: Request, res: Response, next: NextFunction) {
+        const query = req.query as getTermsDTOType;
+        if (!query.limit) query.limit = "10";
+
+        try {
+            const result = await req.prisma.term.findMany({
+                skip: (Number(query.page) - 1) * Number(query.limit),
+                take: Number(query.limit),
+                orderBy: {
+                    id: "desc"
+                }
+            });
+
+            res.status(200).json({
+                message: "terms list:",
+                data: result
+            });
+        } catch (e: any) {
+            return next(CustomErrorClass.internalError());
+        }
+    }
+
     static async addInstructor(req: Request, res: Response, next: NextFunction) {
         const body = req.body as addInstructorDTOType;
 
@@ -68,6 +109,28 @@ export default class CrudController {
             });
         } catch (e: any) {
             if (e.code === "P2002") return next(CustomErrorClass.duplicate());
+            return next(CustomErrorClass.internalError());
+        }
+    }
+
+    static async getInstructors(req: Request, res: Response, next: NextFunction) {
+        const query = req.query as getInstructorsDTOType;
+        if (!query.limit) query.limit = "10";
+
+        try {
+            const result = await req.prisma.instructor.findMany({
+                skip: (Number(query.page) - 1) * Number(query.limit),
+                take: Number(query.limit),
+                orderBy: {
+                    id: "desc"
+                }
+            });
+
+            res.status(200).json({
+                message: "instructors list:",
+                data: result
+            });
+        } catch (e: any) {
             return next(CustomErrorClass.internalError());
         }
     }
@@ -94,6 +157,51 @@ export default class CrudController {
         } catch (e: any) {
             if (e.code === "P2003") return next(CustomErrorClass.notFound(`foreign key not found: ${e.meta.constraint}`));
             if (e.code === "P2002") return next(CustomErrorClass.duplicate());
+            return next(CustomErrorClass.internalError());
+        }
+    }
+
+    static async getInstructorTerms(req: Request, res: Response, next: NextFunction) {
+        const query = req.query as getInstructorTermsDTOType;
+        if (!query.limit) query.limit = "10";
+
+        try {
+            const result = await req.prisma.instructorTerm.findMany({
+                where: {
+                    termId: Number(query.termId)
+                },
+                skip: (Number(query.page) - 1) * Number(query.limit),
+                take: Number(query.limit),
+                include: {
+                    instructor: {
+                        select: {
+                            name: true
+                        }
+                    }
+                },
+                omit: {
+                    termId: true,
+                    instructorId: true,
+                    maxDailyMinutes: true,
+                    maxWeeklyMinutes: true,
+                    availableDays: true
+                },
+                orderBy: {
+                    id: "desc"
+                }
+            });
+
+            res.status(200).json({
+                message: "instructorTerms list:",
+                data: result.map((value) => {
+                    const { instructor, ...rest } = value;
+                    return {
+                        ...rest,
+                        name: instructor.name
+                    };
+                })
+            });
+        } catch (e: any) {
             return next(CustomErrorClass.internalError());
         }
     }
