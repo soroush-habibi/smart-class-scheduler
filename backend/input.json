@@ -1,43 +1,69 @@
 {
-        "rooms": [
-            {
-                "id": 2,
-                "capacity": 50
-            },
-            {
-                "id": 3,
-                "capacity": 40
-            }
-        ],
-        "instructors": [
-            {
-                "maxDailyMinutes": 400,
-                "maxWeeklyMinutes": 4000,
-                "availableDays": null,
-                "id": 1,
-                "name": "Dr.rashidi"
-            },
-            {
-                "maxDailyMinutes": 300,
-                "maxWeeklyMinutes": 5000,
-                "availableDays": [
-                    "Sat",
-                    "Wed"
-                ],
-                "id": 7,
-                "name": "Dr.teymoori"
-            }
-        ],
-        "courses": [
-            {
-                "id": 7,
-                "name": "algorithm",
-                "sessionCount": 1,
-                "duration": 30,
-                "capacity": 17,
-                "level": "phd",
-                "instructorId": 7,
-                "term": 8
-            }
-        ]
-    }
+  "rooms": [
+    { "id": "R1", "capacity": 100 },
+    { "id": "R2", "capacity": 80 },
+    { "id": "R3", "capacity": 60 },
+    { "id": "R4", "capacity": 50 },
+    { "id": "R5", "capacity": 40 },
+    { "id": "R6", "capacity": 35 },
+    { "id": "R7", "capacity": 30 },
+    { "id": "R8", "capacity": 30 }
+  ],
+  "instructors": [
+    { "id": "I1", "name": "Dr. Ali", "maxDailyMinutes": 240, "maxWeeklyMinutes": 1200 },
+    { "id": "I2", "name": "Dr. Sara", "maxDailyMinutes": 240, "maxWeeklyMinutes": 1200 },
+    { "id": "I3", "name": "Dr. Reza", "maxDailyMinutes": 240, "maxWeeklyMinutes": 1200 },
+    { "id": "I4", "name": "Dr. Mina", "maxDailyMinutes": 240, "maxWeeklyMinutes": 1200 },
+    { "id": "I5", "name": "Dr. Hossein", "maxDailyMinutes": 240, "maxWeeklyMinutes": 1200 },
+    { "id": "I6", "name": "Dr. Neda", "maxDailyMinutes": 240, "maxWeeklyMinutes": 1200 },
+    { "id": "I7", "name": "Dr. Kaveh", "maxDailyMinutes": 240, "maxWeeklyMinutes": 1200 },
+    { "id": "I8", "name": "Dr. Laleh", "maxDailyMinutes": 240, "maxWeeklyMinutes": 1200 },
+    { "id": "I9", "name": "Dr. Parsa", "maxDailyMinutes": 240, "maxWeeklyMinutes": 1200 },
+    { "id": "I10", "name": "Dr. Roya", "maxDailyMinutes": 240, "maxWeeklyMinutes": 1200 }
+  ],
+  "courses": [
+    { "id": "C1", "name": "Math 101", "instructorId": "I1", "sessionCount": 2, "duration": 60, "capacity": 40, "level": "Undergraduate", "term": 1 },
+    { "id": "C2", "name": "Physics 101", "instructorId": "I2", "sessionCount": 2, "duration": 60, "capacity": 35, "level": "Undergraduate", "term": 1 },
+    { "id": "C3", "name": "CS 101", "instructorId": "I3", "sessionCount": 2, "duration": 60, "capacity": 30, "level": "Undergraduate", "term": 1 },
+    { "id": "C4", "name": "AI 201", "instructorId": "I4", "sessionCount": 1, "duration": 60, "capacity": 50, "level": "Graduate", "term": 2 },
+    { "id": "C5", "name": "ML 201", "instructorId": "I5", "sessionCount": 1, "duration": 60, "capacity": 45, "level": "Graduate", "term": 2 },
+    { "id": "C6", "name": "Data Science 301", "instructorId": "I6", "sessionCount": 2, "duration": 60, "capacity": 50, "level": "PhD", "term": 3 },
+    { "id": "C7", "name": "Algorithms 101", "instructorId": "I7", "sessionCount": 1, "duration": 60, "capacity": 60, "level": "Undergraduate", "term": 1 },
+    { "id": "C8", "name": "Networks 101", "instructorId": "I8", "sessionCount": 2, "duration": 60, "capacity": 50, "level": "Undergraduate", "term": 1 },
+    { "id": "C9", "name": "Databases 201", "instructorId": "I9", "sessionCount": 1, "duration": 60, "capacity": 40, "level": "Graduate", "term": 2 },
+    { "id": "C10", "name": "AI 301", "instructorId": "I10", "sessionCount": 2, "duration": 60, "capacity": 35, "level": "PhD", "term": 3 },
+
+    { "id": "C11", "name": "Math 102", "instructorId": "I1", "sessionCount": 1, "duration": 60, "capacity": 40, "level": "Undergraduate", "term": 1 },
+    { "id": "C12", "name": "Physics 102", "instructorId": "I2", "sessionCount": 1, "duration": 60, "capacity": 35, "level": "Undergraduate", "term": 1 },
+    { "id": "C13", "name": "CS 102", "instructorId": "I3", "sessionCount": 1, "duration": 60, "capacity": 30, "level": "Undergraduate", "term": 1 },
+    { "id": "C14", "name": "AI 202", "instructorId": "I4", "sessionCount": 2, "duration": 60, "capacity": 50, "level": "Graduate", "term": 2 },
+    { "id": "C15", "name": "ML 202", "instructorId": "I5", "sessionCount": 2, "duration": 60, "capacity": 45, "level": "Graduate", "term": 2 },
+    { "id": "C16", "name": "Data Science 302", "instructorId": "I6", "sessionCount": 1, "duration": 60, "capacity": 50, "level": "PhD", "term": 3 },
+    { "id": "C17", "name": "Algorithms 102", "instructorId": "I7", "sessionCount": 2, "duration": 60, "capacity": 60, "level": "Undergraduate", "term": 1 },
+    { "id": "C18", "name": "Networks 102", "instructorId": "I8", "sessionCount": 1, "duration": 60, "capacity": 50, "level": "Undergraduate", "term": 1 },
+    { "id": "C19", "name": "Databases 202", "instructorId": "I9", "sessionCount": 2, "duration": 60, "capacity": 40, "level": "Graduate", "term": 2 },
+    { "id": "C20", "name": "AI 302", "instructorId": "I10", "sessionCount": 1, "duration": 60, "capacity": 35, "level": "PhD", "term": 3 },
+
+    { "id": "C21", "name": "Math 103", "instructorId": "I1", "sessionCount": 2, "duration": 90, "capacity": 40, "level": "Undergraduate", "term": 1 },
+    { "id": "C22", "name": "Physics 103", "instructorId": "I2", "sessionCount": 2, "duration": 60, "capacity": 35, "level": "Undergraduate", "term": 1 },
+    { "id": "C23", "name": "CS 103", "instructorId": "I3", "sessionCount": 2, "duration": 60, "capacity": 30, "level": "Undergraduate", "term": 1 },
+    { "id": "C24", "name": "AI 203", "instructorId": "I4", "sessionCount": 1, "duration": 60, "capacity": 50, "level": "Graduate", "term": 2 },
+    { "id": "C25", "name": "ML 203", "instructorId": "I5", "sessionCount": 1, "duration": 60, "capacity": 45, "level": "Graduate", "term": 2 },
+    { "id": "C26", "name": "Data Science 303", "instructorId": "I6", "sessionCount": 2, "duration": 60, "capacity": 50, "level": "PhD", "term": 3 },
+    { "id": "C27", "name": "Algorithms 103", "instructorId": "I7", "sessionCount": 1, "duration": 60, "capacity": 60, "level": "Undergraduate", "term": 1 },
+    { "id": "C28", "name": "Networks 103", "instructorId": "I8", "sessionCount": 2, "duration": 60, "capacity": 50, "level": "Undergraduate", "term": 1 },
+    { "id": "C29", "name": "Databases 203", "instructorId": "I9", "sessionCount": 1, "duration": 60, "capacity": 40, "level": "Graduate", "term": 2 },
+    { "id": "C30", "name": "AI 303", "instructorId": "I10", "sessionCount": 2, "duration": 60, "capacity": 35, "level": "PhD", "term": 3 },
+
+    { "id": "C31", "name": "Math 104", "instructorId": "I1", "sessionCount": 1, "duration": 60, "capacity": 40, "level": "Undergraduate", "term": 1 },
+    { "id": "C32", "name": "Physics 104", "instructorId": "I2", "sessionCount": 1, "duration": 60, "capacity": 35, "level": "Undergraduate", "term": 1 },
+    { "id": "C33", "name": "CS 104", "instructorId": "I3", "sessionCount": 1, "duration": 60, "capacity": 30, "level": "Undergraduate", "term": 1 },
+    { "id": "C34", "name": "AI 204", "instructorId": "I4", "sessionCount": 2, "duration": 60, "capacity": 50, "level": "Graduate", "term": 2 },
+    { "id": "C35", "name": "ML 204", "instructorId": "I5", "sessionCount": 2, "duration": 60, "capacity": 45, "level": "Graduate", "term": 2 },
+    { "id": "C36", "name": "Data Science 304", "instructorId": "I6", "sessionCount": 1, "duration": 60, "capacity": 50, "level": "PhD", "term": 3 },
+    { "id": "C37", "name": "Algorithms 104", "instructorId": "I7", "sessionCount": 2, "duration": 60, "capacity": 60, "level": "Undergraduate", "term": 1 },
+    { "id": "C38", "name": "Networks 104", "instructorId": "I8", "sessionCount": 1, "duration": 60, "capacity": 50, "level": "Undergraduate", "term": 1 },
+    { "id": "C39", "name": "Databases 204", "instructorId": "I9", "sessionCount": 2, "duration": 60, "capacity": 40, "level": "Graduate", "term": 2 },
+    { "id": "C40", "name": "AI 304", "instructorId": "I10", "sessionCount": 1, "duration": 60, "capacity": 35, "level": "PhD", "term": 3 }
+  ]
+}
