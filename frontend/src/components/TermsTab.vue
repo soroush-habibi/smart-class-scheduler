@@ -2,6 +2,7 @@
   <v-card class="pa-4">
     <v-card-title>مدیریت ترم‌ها</v-card-title>
     <v-card-text>
+      <!-- فرم اضافه کردن ترم -->
       <v-form ref="form" v-model="valid" lazy-validation>
         <v-row>
           <v-col cols="12" sm="4">
@@ -11,6 +12,7 @@
               type="number"
               :rules="[rules.required, validateMinYear]"
               required
+              min="1395"
             />
           </v-col>
 
@@ -39,7 +41,7 @@
 
         <v-row class="mt-3">
           <v-col cols="12" sm="3">
-            <v-btn color="primary" @click="addTerm" :disabled="submitting">افزودن ترم</v-btn>
+            <v-btn color="primary" @click="addTerm" :loading="submitting">افزودن ترم</v-btn>
           </v-col>
           <v-col cols="12" sm="9">
             <v-alert v-if="error" type="error" dense>{{ error }}</v-alert>
@@ -49,110 +51,180 @@
 
       <v-divider class="my-4" />
 
-      <v-list>
-        <v-list-item v-for="term in terms" :key="term.id">
-          <div>
-            <div><strong>T{{ term.id }}</strong> — {{ term.yearStart }}/{{ term.yearEnd }}</div>
-            <div class="text--secondary">{{ prettyType(term.type) }}</div>
-          </div>
+      <!-- pagination -->
+      <v-row>
+        <v-col cols="12" md="4">
+          <v-select
+            v-model="limit"
+            :items="perPageOptions"
+            item-title="label"
+            item-value="value"
+            dense
+            hide-details
+            label="تعداد در صفحه"
+          />
+        </v-col>
+
+        <v-col cols="12" md="8" class="d-flex align-center justify-end">
+          <v-btn class="me-2" :disabled="page === 1" @click="prevPage">صفحه قبل</v-btn>
+          <v-btn :disabled="!hasMore" @click="nextPage">صفحه بعد</v-btn>
+          <div class="me-4">صفحه {{ page }}</div>
+        </v-col>
+      </v-row>
+
+      <!-- لیست ترم‌ها -->
+      <v-list two-line>
+        <v-list-item v-for="t in terms" :key="t.id">
+          <div>{{ prettyLabel(t) }}</div>
         </v-list-item>
       </v-list>
+
+      <v-alert v-if="loading" type="info" dense>در حال بارگذاری...</v-alert>
     </v-card-text>
   </v-card>
 </template>
 
 <script lang="ts" setup>
-import { ref } from "vue";
-import axios from "axios";
-import type { Term } from "../types";
+import { ref, watch, onMounted } from 'vue'
+import axios from 'axios'
 
-const props = defineProps<{
-  terms: Term[];
-}>();
+type TermAPI = {
+  id: number
+  type: 'first' | 'second' | 'summer'
+  yearStart: number
+  yearEnd: number
+}
+
+type Term = TermAPI
 
 const emit = defineEmits<{
-  (e: "term-added", term: Term): void;
-}>();
+  (e: 'term-added', term: Term): void
+}>()
 
-const valid = ref(false);
-const yearStart = ref<number | null>(null);
-const yearEnd = ref<number | null>(null);
-const type = ref<'first' | 'second' | 'summer' | null>(null);
+const valid = ref(false)
+const yearStart = ref<number | null>(null)
+const yearEnd = ref<number | null>(null)
+const type = ref<'first' | 'second' | 'summer' | null>(null)
 
-const submitting = ref(false);
-const error = ref<string | null>(null);
+const submitting = ref(false)
+const error = ref<string | null>(null)
 
 const rules = {
-  required: (v: any) => !!v || "این فیلد الزامی است",
-};
-
-// حداقل سال شروع
-const validateMinYear = (v: number) => (v >= 1395) || "سال شروع باید حداقل ۱۳۹۵ باشد";
-
-// منطق مشابه بک‌اند
-const validateYearLogic = (v: number) => {
-  if (!yearStart.value || !type.value) return true; // هنوز انتخاب نشده
-  if (type.value === "summer") {
-    return yearStart.value === v || "برای تابستان سال پایان باید برابر سال شروع باشد";
-  } else {
-    return v - yearStart.value === 1 || "برای نیم‌سال‌ها، سال پایان باید برابر start + 1 باشد";
-  }
-};
+  required: (v: any) => !!v || 'این فیلد الزامی است',
+}
 
 const types = [
-  { label: "نیم‌سال اول", value: "first" },
-  { label: "نیم‌سال دوم", value: "second" },
-  { label: "تابستان", value: "summer" },
-];
+  { label: 'نیم‌سال اول', value: 'first' },
+  { label: 'نیم‌سال دوم', value: 'second' },
+  { label: 'تابستان', value: 'summer' },
+]
 
-function prettyType(t: string) {
-  if (t === "first") return "نیم‌سال اول";
-  if (t === "second") return "نیم‌سال دوم";
-  if (t === "summer") return "تابستان";
-  return t;
+const validateMinYear = (v: number) => (v >= 1395) || 'سال شروع باید حداقل ۱۳۹۵ باشد'
+const validateYearLogic = (v: number) => {
+  if (!yearStart.value || !type.value) return true
+  if (type.value === 'summer') return yearStart.value === v || 'برای تابستان سال پایان باید برابر سال شروع باشد'
+  return v - yearStart.value === 1 || 'برای نیم‌سال‌ها، سال پایان باید برابر start + 1 باشد'
+}
+
+function prettyLabel(t: Term) {
+  switch(t.type) {
+    case 'first': return `ترم نیم‌سال اول ${t.yearStart}-${t.yearEnd}`
+    case 'second': return `ترم نیم‌سال دوم ${t.yearStart}-${t.yearEnd}`
+    case 'summer': return `ترم تابستان ${t.yearStart}`
+    default: return `${t.yearStart}-${t.yearEnd}`
+  }
 }
 
 async function addTerm() {
-  error.value = null;
+  error.value = null
   if (!yearStart.value || !yearEnd.value || !type.value) {
-    error.value = "همه فیلدها الزامی هستند";
-    return;
+    error.value = 'همه فیلدها الزامی هستند'
+    return
   }
 
-  // بررسی منطق سال قبل از ارسال
-  if (type.value === "summer") {
+  // backend logic
+  if (type.value === 'summer') {
     if (yearStart.value !== yearEnd.value) {
-      error.value = "برای تابستان سال پایان باید برابر سال شروع باشد";
-      return;
+      error.value = 'برای تابستان سال پایان باید برابر سال شروع باشد'
+      return
     }
   } else {
     if (yearEnd.value - yearStart.value !== 1) {
-      error.value = "برای نیم‌سال‌ها، سال پایان باید برابر start + 1 باشد";
-      return;
+      error.value = 'برای نیم‌سال‌ها، سال پایان باید برابر start + 1 باشد'
+      return
     }
   }
 
-  const payload = {
-    yearStart: yearStart.value,
-    yearEnd: yearEnd.value,
-    type: type.value,
-  };
+  const payload = { yearStart: yearStart.value, yearEnd: yearEnd.value, type: type.value }
 
-  submitting.value = true;
+  submitting.value = true
   try {
-    const res = await axios.post<Term>("http://localhost:3000/term", payload);
-    const created: Term = res.data;
+    const res = await axios.post('http://localhost:3000/term', payload)
+    const created = res.data.data
+    emit('term-added', created)
 
-    emit("term-added", created);
+    // reset form
+    yearStart.value = null
+    yearEnd.value = null
+    type.value = null
 
-    yearStart.value = null;
-    yearEnd.value = null;
-    type.value = null;
+    // refresh list
+    fetchTerms()
   } catch (e: any) {
-    console.error("Error adding term:", e);
-    error.value = e?.response?.data?.message || "خطا در افزودن ترم";
+    console.error(e)
+    if (e.response?.data?.code === 104) {
+      error.value = 'این ترم قبلاً اضافه شده است'
+    } else {
+      error.value = e?.response?.data?.message || 'خطا در افزودن ترم'
+    }
   } finally {
-    submitting.value = false;
+    submitting.value = false
   }
 }
+
+const terms = ref<Term[]>([])
+const page = ref<number>(1)
+const limit = ref<number>(10)
+const loading = ref(false)
+const hasMore = ref(false)
+
+const perPageOptions = [
+  { label: '10 / صفحه', value: 10 },
+  { label: '20 / صفحه', value: 20 },
+  { label: '50 / صفحه', value: 50 },
+]
+
+async function fetchTerms() {
+  loading.value = true
+  try {
+    const res = await axios.get(`http://localhost:3000/term?page=${page.value}&limit=${limit.value}`)
+    terms.value = res.data.data   // ← اینجا
+    hasMore.value = res.data.data.length === limit.value
+  } catch (err) {
+    console.error('fetchTerms', err)
+  } finally {
+    loading.value = false
+  }
+}
+
+function prevPage() {
+  if (page.value > 1) {
+    page.value--
+    fetchTerms()
+  }
+}
+function nextPage() {
+  if (!hasMore.value) return
+  page.value++
+  fetchTerms()
+}
+
+watch(limit, () => {
+  page.value = 1
+  fetchTerms()
+})
+
+onMounted(() => {
+  fetchTerms()
+})
 </script>

@@ -13,9 +13,12 @@ export const validator = (templateObj: ObjectSchema<any>, fieldType: FieldType =
         try {
             const dataToBeValidate = req[fieldType];
 
-            const validate = templateObj.validate(dataToBeValidate);
+            const validate = templateObj.validate(dataToBeValidate, { convert: true });
 
             if (validate.error) throw validate.error;
+            if (fieldType === FieldType.BODY) {
+                req[fieldType] = validate.value;
+            }
 
             next();
         } catch (e: any) {

@@ -1,8 +1,9 @@
 import express, { NextFunction, Request, Response } from "express";
+import cors from "cors";
 import "dotenv/config";
 import crudRouter from "./routes/crudRouter.js";
 import prisma from "@prisma/client";
-import { CustomErrorClass, errorEnum, errorType } from "./utils/customError.js";
+import { errorEnum, errorType } from "./utils/customError.js";
 import operationRouter from "./routes/operationRouter.js";
 
 const app = express();
@@ -23,6 +24,12 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 
 app.use(express.json());
 app.use(express.urlencoded());
+app.use(cors({
+    origin: '*',
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true
+}));
 
 app.use(crudRouter);
 app.use(operationRouter);

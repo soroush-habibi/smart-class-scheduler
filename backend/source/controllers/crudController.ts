@@ -31,7 +31,10 @@ export default class CrudController {
         try {
             const result = await req.prisma.room.findMany({
                 skip: (Number(query.page) - 1) * Number(query.limit),
-                take: Number(query.limit)
+                take: Number(query.limit),
+                orderBy: {
+                    id: "desc"
+                }
             });
 
             res.status(200).json({
