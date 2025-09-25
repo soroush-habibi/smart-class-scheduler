@@ -2,6 +2,7 @@
   "schedule": [
     {
       "courseId": "C17",
+      "courseName": "Algorithms 102",
       "sessions": [
         {
           "day": "Sat",
@@ -19,6 +20,7 @@
     },
     {
       "courseId": "C37",
+      "courseName": "Algorithms 104",
       "sessions": [
         {
           "day": "Mon",
@@ -36,6 +38,7 @@
     },
     {
       "courseId": "C14",
+      "courseName": "AI 202",
       "sessions": [
         {
           "day": "Sat",
@@ -53,6 +56,7 @@
     },
     {
       "courseId": "C26",
+      "courseName": "Data Science 303",
       "sessions": [
         {
           "day": "Sat",
@@ -70,6 +74,7 @@
     },
     {
       "courseId": "C28",
+      "courseName": "Networks 103",
       "sessions": [
         {
           "day": "Sat",
@@ -87,6 +92,7 @@
     },
     {
       "courseId": "C34",
+      "courseName": "AI 204",
       "sessions": [
         {
           "day": "Mon",
@@ -104,6 +110,7 @@
     },
     {
       "courseId": "C6",
+      "courseName": "Data Science 301",
       "sessions": [
         {
           "day": "Mon",
@@ -121,6 +128,7 @@
     },
     {
       "courseId": "C8",
+      "courseName": "Networks 101",
       "sessions": [
         {
           "day": "Mon",
@@ -138,6 +146,7 @@
     },
     {
       "courseId": "C15",
+      "courseName": "ML 202",
       "sessions": [
         {
           "day": "Sat",
@@ -155,6 +164,7 @@
     },
     {
       "courseId": "C35",
+      "courseName": "ML 204",
       "sessions": [
         {
           "day": "Mon",
@@ -172,6 +182,7 @@
     },
     {
       "courseId": "C1",
+      "courseName": "Math 101",
       "sessions": [
         {
           "day": "Sat",
@@ -189,6 +200,7 @@
     },
     {
       "courseId": "C19",
+      "courseName": "Databases 202",
       "sessions": [
         {
           "day": "Sat",
@@ -206,6 +218,7 @@
     },
     {
       "courseId": "C21",
+      "courseName": "Math 103",
       "sessions": [
         {
           "day": "Mon",
@@ -223,6 +236,7 @@
     },
     {
       "courseId": "C39",
+      "courseName": "Databases 204",
       "sessions": [
         {
           "day": "Mon",
@@ -240,6 +254,7 @@
     },
     {
       "courseId": "C10",
+      "courseName": "AI 301",
       "sessions": [
         {
           "day": "Sat",
@@ -257,6 +272,7 @@
     },
     {
       "courseId": "C2",
+      "courseName": "Physics 101",
       "sessions": [
         {
           "day": "Sat",
@@ -274,6 +290,7 @@
     },
     {
       "courseId": "C22",
+      "courseName": "Physics 103",
       "sessions": [
         {
           "day": "Mon",
@@ -291,6 +308,7 @@
     },
     {
       "courseId": "C30",
+      "courseName": "AI 303",
       "sessions": [
         {
           "day": "Mon",
@@ -308,6 +326,7 @@
     },
     {
       "courseId": "C23",
+      "courseName": "CS 103",
       "sessions": [
         {
           "day": "Sat",
@@ -325,6 +344,7 @@
     },
     {
       "courseId": "C3",
+      "courseName": "CS 101",
       "sessions": [
         {
           "day": "Mon",
@@ -342,6 +362,7 @@
     },
     {
       "courseId": "C27",
+      "courseName": "Algorithms 103",
       "sessions": [
         {
           "day": "Wed",
@@ -353,6 +374,7 @@
     },
     {
       "courseId": "C7",
+      "courseName": "Algorithms 101",
       "sessions": [
         {
           "day": "Sat",
@@ -364,6 +386,7 @@
     },
     {
       "courseId": "C16",
+      "courseName": "Data Science 302",
       "sessions": [
         {
           "day": "Wed",
@@ -375,6 +398,7 @@
     },
     {
       "courseId": "C18",
+      "courseName": "Networks 102",
       "sessions": [
         {
           "day": "Wed",
@@ -386,6 +410,7 @@
     },
     {
       "courseId": "C24",
+      "courseName": "AI 203",
       "sessions": [
         {
           "day": "Wed",
@@ -397,6 +422,7 @@
     },
     {
       "courseId": "C36",
+      "courseName": "Data Science 304",
       "sessions": [
         {
           "day": "Sat",
@@ -408,6 +434,7 @@
     },
     {
       "courseId": "C38",
+      "courseName": "Networks 104",
       "sessions": [
         {
           "day": "Sat",
@@ -419,6 +446,7 @@
     },
     {
       "courseId": "C4",
+      "courseName": "AI 201",
       "sessions": [
         {
           "day": "Sat",
@@ -430,6 +458,7 @@
     },
     {
       "courseId": "C25",
+      "courseName": "ML 203",
       "sessions": [
         {
           "day": "Wed",
@@ -441,6 +470,7 @@
     },
     {
       "courseId": "C5",
+      "courseName": "ML 201",
       "sessions": [
         {
           "day": "Sat",
@@ -452,6 +482,7 @@
     },
     {
       "courseId": "C11",
+      "courseName": "Math 102",
       "sessions": [
         {
           "day": "Wed",
@@ -463,6 +494,7 @@
     },
     {
       "courseId": "C29",
+      "courseName": "Databases 203",
       "sessions": [
         {
           "day": "Wed",
@@ -474,6 +506,7 @@
     },
     {
       "courseId": "C31",
+      "courseName": "Math 104",
       "sessions": [
         {
           "day": "Sat",
@@ -485,6 +518,7 @@
     },
     {
       "courseId": "C9",
+      "courseName": "Databases 201",
       "sessions": [
         {
           "day": "Sat",
@@ -496,6 +530,7 @@
     },
     {
       "courseId": "C12",
+      "courseName": "Physics 102",
       "sessions": [
         {
           "day": "Wed",
@@ -507,6 +542,7 @@
     },
     {
       "courseId": "C20",
+      "courseName": "AI 302",
       "sessions": [
         {
           "day": "Wed",
@@ -518,6 +554,7 @@
     },
     {
       "courseId": "C32",
+      "courseName": "Physics 104",
       "sessions": [
         {
           "day": "Sun",
@@ -529,6 +566,7 @@
     },
     {
       "courseId": "C40",
+      "courseName": "AI 304",
       "sessions": [
         {
           "day": "Sat",
@@ -540,6 +578,7 @@
     },
     {
       "courseId": "C13",
+      "courseName": "CS 102",
       "sessions": [
         {
           "day": "Wed",
@@ -551,6 +590,7 @@
     },
     {
       "courseId": "C33",
+      "courseName": "CS 104",
       "sessions": [
         {
           "day": "Sun",

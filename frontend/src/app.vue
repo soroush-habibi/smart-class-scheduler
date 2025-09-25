@@ -33,6 +33,12 @@
       <div v-if="tab === 'rooms'">
         <RoomsTab :rooms="rooms" @room-created="handleRoomCreated" />
       </div>
+
+      <!-- NEW: Generate / Timeline tab -->
+      <div v-if="tab === 'generate'">
+        <!-- Timeline component handles term selection and generate POST -->
+        <Timeline />
+      </div>
     </v-container>
   </v-app>
 </template>
@@ -43,6 +49,7 @@ import TermsTab from "./components/TermsTab.vue";
 import InstructorTab from "./components/InstructorTab.vue";
 import CoursesTab from "./components/CoursesTab.vue";
 import RoomsTab from "./components/RoomsTab.vue";
+import Timeline from "./components/Timeline.vue";
 import type { Term } from "./types";
 
 const tab = ref<'terms' | 'instructors' | 'courses' | 'rooms' | 'generate'>('terms');
@@ -54,6 +61,7 @@ const rooms = ref<any[]>([]);
 const instructorTerms = ref<any[]>([]);
 
 function handleTermAdded(term: Term) {
+  // push new term into local list so other tabs see it
   terms.value.push(term);
 }
 
@@ -69,3 +77,7 @@ function handleRoomCreated(room: any) {
   rooms.value.push(room);
 }
 </script>
+
+<style scoped>
+/* اگر نیاز به استایل خاص داشتی اینجا اضافه کن */
+</style>

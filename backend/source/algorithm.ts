@@ -44,7 +44,8 @@ interface SessionAssignment {
 // NOTE: ScheduleEntry no longer has top-level roomId.
 // Each session carries its own roomId.
 interface ScheduleEntry {
-    courseId: string;
+    courseId: string,
+    courseName: string,
     sessions: { day: Day; start: string; end: string; roomId: string; }[];
 }
 
@@ -273,6 +274,7 @@ function scheduleClasses(input: InputData): OutputData | null {
                         // push schedule entry with roomId per session
                         schedule.push({
                             courseId: course.id,
+                            courseName: course.name,
                             sessions: [{ day: d1, start: startTime, end: endTime, roomId: room.id }]
                         });
                         placed = true;
@@ -303,6 +305,7 @@ function scheduleClasses(input: InputData): OutputData | null {
                                 instructorWeeklyMinutes.set(instructor.id, weekUsed + course.duration * 2);
                                 schedule.push({
                                     courseId: course.id,
+                                    courseName: course.name,
                                     sessions: [
                                         { day: d1, start: startTime, end: endTime, roomId: room1.id },
                                         { day: d2!, start: startTime, end: endTime, roomId: room2.id }
