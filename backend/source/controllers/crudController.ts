@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { addCourseDTOType, addInstructorDTOType, addRoomDTOType, addTermDTOType, getInstructorsDTOType, getInstructorTermsDTOType, getRoomsDTOType, getTermsDTOType, scheduleInstructorDTOType, scheduleInstructorParamsDTOType } from "../dto/crud.dto.js";
+import { addCourseDTOType, addInstructorDTOType, addRoomDTOType, addTermDTOType, deleteCourseDTOType, getCoursesDTOType, getInstructorsDTOType, getInstructorTermsDTOType, getRoomsDTOType, getTermsDTOType, scheduleInstructorDTOType, scheduleInstructorParamsDTOType } from "../dto/crud.dto.js";
 import { CustomErrorClass } from "../utils/customError.js";
 import { termType } from "@prisma/client";
 
@@ -232,6 +232,88 @@ export default class CrudController {
         } catch (e: any) {
             if (e.code === "P2003") return next(CustomErrorClass.notFound(`foreign key not found: ${e.meta.constraint}`));
             if (e.code === "P2002") return next(CustomErrorClass.duplicate());
+            return next(CustomErrorClass.internalError());
+        }
+    }
+
+    static async getCourses(req: Request, res: Response, next: NextFunction) {
+        const query = req.query as getCoursesDTOType;
+        if (!query.limit) query.limit = "10";
+
+        try {
+            const databaseQuery = {
+                name: {},
+                instructorTermId: {}
+            };
+
+            if (query.name) {
+                databaseQuery.name = {
+                    contains: query.name
+                };
+            }
+            if (query.instructorTermId) {
+                databaseQuery.instructorTermId = Number(query.instructorTermId);
+            }
+
+            const result = await req.prisma.course.findMany({
+                where: databaseQuery,
+                skip: (Number(query.page) - 1) * Number(query.limit),
+                take: Number(query.limit),
+                orderBy: {
+                    id: "desc"
+                },
+                include: {
+                    instructor: {
+                        include: {
+                            instructor: {
+                                select: {
+                                    name: true
+                                }
+                            }
+                        },
+                        omit: {
+                            availableDays: true,
+                            id: true,
+                            instructorId: true,
+                            maxDailyMinutes: true,
+                            maxWeeklyMinutes: true,
+                            termId: true
+                        }
+                    }
+                }
+            });
+
+            res.status(200).json({
+                message: "courses list:",
+                data: result.map((value) => {
+                    const { instructor, ...rest } = value;
+                    return {
+                        ...rest,
+                        instructorName: instructor.instructor.name
+                    };
+                })
+            });
+        } catch (e: any) {
+            return next(CustomErrorClass.internalError());
+        }
+    }
+
+    static async deleteCourse(req: Request, res: Response, next: NextFunction) {
+        const params = req.params as deleteCourseDTOType;
+
+        try {
+            const result = await req.prisma.course.delete({
+                where: {
+                    id: Number(params.id)
+                }
+            });
+
+            res.status(200).json({
+                message: "course deleted!",
+                data: result.id
+            });
+        } catch (e: any) {
+            if (e.code === "P2025") return next(CustomErrorClass.notFound());
             return next(CustomErrorClass.internalError());
         }
     }

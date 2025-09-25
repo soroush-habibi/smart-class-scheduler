@@ -135,3 +135,29 @@ type addCourseDTOType = {
 };
 
 export { addCourseDTO, addCourseDTOType };
+
+const getCoursesDTO = Joi.object({
+    page: Joi.number().integer().min(1).required(),
+    limit: Joi.number().integer().min(1).optional(),
+    name: Joi.string().max(200).optional(),
+    instructorTermId: Joi.number().integer().min(1).optional()
+}).required();
+
+type getCoursesDTOType = {
+    page: string,
+    limit?: string,
+    name?: string,
+    instructorTermId?: string;
+};
+
+export { getCoursesDTO, getCoursesDTOType };
+
+const deleteCourseDTO = Joi.object({
+    id: Joi.number().integer().min(1).required()
+}).required();
+
+type deleteCourseDTOType = {
+    id: string;
+};
+
+export { deleteCourseDTO, deleteCourseDTOType };
