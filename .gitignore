@@ -1,7 +1,7 @@
 backend/.env
 backend/node_modules
 backend/build
-backend/prisma
+backend/prisma/migrations
 frontend/dist
 frontend/node_modules
 frontend/dist

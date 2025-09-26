@@ -1,0 +1,75 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum termType {
+  first
+  second
+  summer
+}
+
+enum levelType {
+  undergraduate
+  graduate
+  phd
+}
+
+model Term {
+  id             Int              @id @default(autoincrement())
+  yearStart      Int
+  yearEnd        Int
+  type           termType
+  InstructorTerm InstructorTerm[]
+
+  @@unique([yearStart, yearEnd, type])
+}
+
+model Room {
+  id       Int @id @default(autoincrement())
+  capacity Int
+}
+
+model Instructor {
+  id             Int              @id @default(autoincrement())
+  name           String           @unique @db.VarChar(200)
+  InstructorTerm InstructorTerm[]
+}
+
+model InstructorTerm {
+  id               Int        @id @default(autoincrement())
+  maxDailyMinutes  Int
+  maxWeeklyMinutes Int
+  availableDays    Json?
+  term             Term       @relation(fields: [termId], references: [id])
+  termId           Int
+  instructor       Instructor @relation(fields: [instructorId], references: [id])
+  instructorId     Int
+  Course           Course[]
+
+  @@unique([termId, instructorId])
+}
+
+model Course {
+  id               Int            @id @default(autoincrement())
+  name             String         @db.VarChar(200)
+  instructor       InstructorTerm @relation(fields: [instructorTermId], references: [id])
+  instructorTermId Int
+  sessionCount     Int
+  duration         Int
+  capacity         Int
+  level            levelType
+  forTerm          Int
+
+  @@unique([name, instructorTermId, forTerm, level])
+}
